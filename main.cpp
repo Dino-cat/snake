@@ -14,12 +14,12 @@ int tail=0;
 enum direction { stop = 0, Left, Right, Up, Down};
 direction dir;
 
-void HideCursor()
+void HideCursor()  //隱藏鼠標
 {
 CONSOLE_CURSOR_INFO cursor_info = {1, 0};
 SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 }
-void Gotoxy(int x, int y){
+void Gotoxy(int x, int y){  //用goto實現清頻
     //int xx=0x0b;
     HANDLE hOutput;
     COORD loc;
@@ -30,7 +30,7 @@ void Gotoxy(int x, int y){
     return;
 }
 
-void Setup(){
+void Setup(){  //遊戲初始設定
     HideCursor();
     srand( time(NULL) );
     gameOver = false;
@@ -45,7 +45,7 @@ void Setup(){
     if(dotY == 0 || dotY >= height-1)
         dotY = height/2;
 }
-void Lobby(){
+void Lobby(){  //遊戲大廳
     Gotoxy(0,0);
     cout << "────────────────────" << endl;
     for(int i=1;i<19;i++){
@@ -79,7 +79,7 @@ void Lobby(){
                 i++;
             }
             if(i == 8 && score <= 5)
-                cout << "|評語:.......。   |" << endl;
+                cout << "|評語:.......。    |" << endl;
             else if(i == 8 && score <= 10)
                 cout << "|評語:沒童年484。  |" << endl;
             else if(i == 8 && score <= 15 )
@@ -89,7 +89,7 @@ void Lobby(){
             else if(i == 8 && score <= 30 )
                 cout << "|評語:善。         |" << endl;
             else if(i == 8 && score >= 50 )
-                cout << "|評語:厲害了。   |" << endl;
+                cout << "|評語:厲害了。     |" << endl;
             else
                 cout << "|                  |" << endl;
         }
@@ -103,7 +103,7 @@ void Lobby(){
     break;
     }
 }
-void Map(){
+void Map(){  //地圖繪製
     Gotoxy(0,0);
     //system("cls");
     for(int i = 0 ;i<width;i++)
@@ -146,7 +146,7 @@ void Map(){
     for(int i = 0; i<width ; i++)
         cout << "─";
 }
-void Input(){
+void Input(){  //玩家輸入
     if(kbhit()){
         switch(getch()){
             case 'a':
@@ -237,7 +237,7 @@ int main()
         Map();
         Input();
         Logic();
-        Sleep(200-score*3);
+        Sleep(200-score*3);  //蛇移動速度隨分數越高越快
     }
     Lobby();
     //system("pause");

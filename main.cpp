@@ -14,12 +14,12 @@ int tail=0;
 enum direction { stop = 0, Left, Right, Up, Down};
 direction dir;
 
-void HideCursor()  //隱藏鼠標
+void HideCursor()
 {
 CONSOLE_CURSOR_INFO cursor_info = {1, 0};
 SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 }
-void Gotoxy(int x, int y){  //用goto實現清頻
+void Gotoxy(int x, int y){
     //int xx=0x0b;
     HANDLE hOutput;
     COORD loc;
@@ -30,7 +30,7 @@ void Gotoxy(int x, int y){  //用goto實現清頻
     return;
 }
 
-void Setup(){  //遊戲初始設定
+void Setup(){
     HideCursor();
     srand( time(NULL) );
     gameOver = false;
@@ -45,7 +45,7 @@ void Setup(){  //遊戲初始設定
     if(dotY == 0 || dotY >= height-1)
         dotY = height/2;
 }
-void Lobby(){  //遊戲大廳
+void Lobby(){
     Gotoxy(0,0);
     cout << "────────────────────" << endl;
     for(int i=1;i<19;i++){
@@ -79,7 +79,7 @@ void Lobby(){  //遊戲大廳
                 i++;
             }
             if(i == 8 && score <= 5)
-                cout << "|評語:.......。    |" << endl;
+                cout << "|評語:.......。   |" << endl;
             else if(i == 8 && score <= 10)
                 cout << "|評語:沒童年484。  |" << endl;
             else if(i == 8 && score <= 15 )
@@ -89,7 +89,7 @@ void Lobby(){  //遊戲大廳
             else if(i == 8 && score <= 30 )
                 cout << "|評語:善。         |" << endl;
             else if(i == 8 && score >= 50 )
-                cout << "|評語:厲害了。     |" << endl;
+                cout << "|評語:厲害了。   |" << endl;
             else
                 cout << "|                  |" << endl;
         }
@@ -103,7 +103,7 @@ void Lobby(){  //遊戲大廳
     break;
     }
 }
-void Map(){  //地圖繪製
+void Map(){
     Gotoxy(0,0);
     //system("cls");
     for(int i = 0 ;i<width;i++)
@@ -146,7 +146,7 @@ void Map(){  //地圖繪製
     for(int i = 0; i<width ; i++)
         cout << "─";
 }
-void Input(){  //玩家輸入
+void Input(){
     if(kbhit()){
         switch(getch()){
             case 'a':
@@ -198,7 +198,7 @@ void Logic(){
     if((level ==2)&&(x>=width-1 || x<=0 || y>=height-1 || y<=0)){
         gameOver = true;
     }
-    else{
+    else{  //穿牆
         if(x >= width-1)
             x = 1;
         else if(x <= 0)
@@ -215,8 +215,18 @@ void Logic(){
 
     if(x == dotX && y == dotY){
         score += 1;
+        Re:
         dotX = rand()%width;
         dotY = rand()%height;
+        switch(dotX == x && dotY == y){  //水果跟蛇的頭重疊
+            dotX = rand()%width;
+            dotY = rand()%height;
+        }
+        for(int i=0;i<tail;i++){  //水果跟蛇身重疊
+            if(dotX == tailX[i] && dotY == tailY[i])
+                goto Re;
+        }
+
        // tailX[tail] = x;
        // tailY[tail] = y;
         tail++;
@@ -237,7 +247,7 @@ int main()
         Map();
         Input();
         Logic();
-        Sleep(200-score*3);  //蛇移動速度隨分數越高越快
+        Sleep(200-score*3);
     }
     Lobby();
     //system("pause");
